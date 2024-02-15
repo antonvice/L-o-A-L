@@ -18,22 +18,26 @@ L-o-A-w-L  (Level of Abstraction with LLM) is an innovative tool designed to dyn
 ### Installation
 
 1. Clone the repository:
+
 ````bash
 git clone https://github.com/yourusername/L-o-A-L.git
 ```
 
 2. Navigate to the project directory:
+
 ```bash
 z L-o-A-L
 ```
 
 3. Set up a virtual environment.
+
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 ```
 
 4. Install the required dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
