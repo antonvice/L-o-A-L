@@ -49,7 +49,7 @@ class Loawl(BaseModel):
         prompt = f"Summarize the following text with detail level {detail_level}:\n\n{self.document}"
         response = self.client.chat.completions.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}],  # prompt,
+            messages=[{"role": "user", "content": prompt}], \
             max_tokens=self.config.max_tokens,
             temperature=self.config.temperature,
             top_p=self.config.top_p
