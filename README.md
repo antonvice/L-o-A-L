@@ -4,5 +4,37 @@
 L-o-A-w-L  (Level of Abstraction with LLM) is an innovative tool designed to dynamically adjust the level of abstraction in a document using language learning models (LLMs). By leveraging the power of LLMs, L-o-A-w-L allows users to interactively explore documents at various levels of detail, simply by scrolling to increase or decrease the abstraction level. This project aims to enhance reading efficiency and comprehension, making it easier to grasp complex documents or quickly get an overview of lengthy texts.
 
 ## How It Works
-### Main Idea
-L-o-A-w-L takes a document as input and generates multiple abstraction layers using language learning models. These layers range from highly detailed to very abstract summaries. The user can then interact with the document through a web interface, where scrolling up or down adjusts the level of detail displayed, allowing for a customized reading experience.
+
+### Web Version
+
+#### Step 1: Launch the Web Application 🚀
+Start the L-o-A-w-L web application using Gunicorn for a robust and responsive user experience.
+
+
+```bash
+gunicorn app:app
+```
+
+#### Step 2: Upload Document 📤
+Currently, users can input a document via a URL. Support for other formats like `.txt`, `.pdf`, and `.docx` is in the works. 🚧
+
+#### Step 3: Set Initial Abstraction Level 🔍
+The system automatically sets an initial depth level to maintain meaning upon compression. An additional expansion level is available to enrich the understanding of the document's general idea. This bidirectional approach is key for initial exploration.
+
+#### Step 4: Interactive Abstraction Scaling 🎚️
+Adjust the level of detail by scrolling over a paragraph. Enjoy a seamless experience as the initial summaries at various depths are pre-computed and require no further processing.
+
+#### Step 5: Display of Tokens and Save Document 💾
+Witness the efficiency of language models as L-o-A-w-L displays the tokens used for generating summaries. Save the state of your document at any time, capturing the desired level of abstraction for future reference.
+
+### Behind the Scenes 🧠
+L-o-A-w-L harnesses deep learning models for context-aware text analysis and summarization. When you adjust the level of abstraction, pre-computed summaries ensure instant response without the need for further server computation.
+
+### Step 6: Export and Use 📋
+Once you've fine-tuned the document to your liking, export the summary with the click of a button. Use the condensed material for presentations, quick reviews, or as a foundation for more in-depth study.
+
+
+### Behind the Scenes
+Underneath the user-friendly interface, L-o-A-w-L employs advanced deep learning models to analyze and summarize text WHILE MAINTAINING THE CONTEXT AWARENESS. When the user adjusts the abstraction level, a request is sent to the server where the LLM processes the current text in view. The LLM evaluates the context and content, generating a summary that corresponds to the requested level of detail.
+
+The flexibility of the LLM allows L-o-A-w-L to produce summaries that are not only concise but also context-aware, ensuring that key information is highlighted or expanded upon as needed. This makes it an invaluable tool for researchers, students, or professionals who need to process large volumes of text efficiently.
