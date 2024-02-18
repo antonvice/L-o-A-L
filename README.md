@@ -34,7 +34,7 @@ L-o-A-w-L harnesses deep learning models for context-aware text analysis and sum
 Once you've fine-tuned the document to your liking, export the summary with the click of a button. Use the condensed material for presentations, quick reviews, or as a foundation for more in-depth study.
 
 
-### Behind the Scenes
+## Behind the Scenes
 Underneath the user-friendly interface, L-o-A-w-L employs advanced deep learning models to analyze and summarize text WHILE MAINTAINING THE CONTEXT AWARENESS. When the user adjusts the abstraction level, a request is sent to the server where the LLM processes the current text in view. The LLM evaluates the context and content, generating a summary that corresponds to the requested level of detail.
 
 The flexibility of the LLM allows L-o-A-w-L to produce summaries that are not only concise but also context-aware, ensuring that key information is highlighted or expanded upon as needed. This makes it an invaluable tool for researchers, students, or professionals who need to process large volumes of text efficiently.

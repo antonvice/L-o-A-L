@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L-o-A-w-L Document Upload</title>
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+</head>
+<body class="cyberpunk-background">
+    <div class="upload-container">
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="document" id="document">
+            <button type="submit">Upload Document</button>
+        </form>
+    </div>
+</body>
+</html>

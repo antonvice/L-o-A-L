@@ -1,0 +1,41 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Courier New', Courier, monospace;
+    background: #0a0a0a url('path_to_cyberpunk_background_image.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.upload-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 rgba(0, 255, 255, 0.5);
+    text-align: center;
+    color: #00fffc;
+}
+
+input[type="file"] {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+button {
+    display: inline-block;
+    background: #003366;
+    color: #00fffc;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+button:hover {
+    background: #005577;
+}

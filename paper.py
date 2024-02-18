@@ -1,16 +1,10 @@
 # Implementation without Langchain
- 
+
 #### LOADER
 
-'''
-This is what needs to be done with bs4 without Langchainz
-from langchain_community.document_loaders import WebBaseLoader
-# Load
-link_url = "https://lilianweng.github.io/posts/2023-06-23-agent/"
-loader = WebBaseLoader(link_url)
-pages = loader.load()
+#* This is just a web based loader, 
+#* need to implement other loaders
 
-'''
 
 from bs4 import BeautifulSoup
 import requests
