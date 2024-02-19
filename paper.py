@@ -1,94 +1,70 @@
-# Implementation without Langchain
-
-#### LOADER
-
-#* This is just a web based loader, 
-#* need to implement other loaders
-
-
+## Loading + Parsing
 from bs4 import BeautifulSoup
 import requests
 from typing import List
 
-def parse_page(url:str)-> List[str]:
+def fetch_html_content(url: str) -> str:
     response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    paragraphs = [p.get_text() for p in soup.find_all('p')] 
+    return response.text
+
+def parse_html_to_paragraphs(html_content: str) -> List[str]:
+    soup = BeautifulSoup(html_content, 'html.parser')
+    paragraphs = [p.get_text() for p in soup.find_all('p')]
     return paragraphs
 
-pages = parse_page('https://lilianweng.github.io/posts/2023-06-23-agent/')
-
-## TEXT SPLITTER
-'''
-
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=500,
-    chunk_overlap=100,
-    length_function=len,
-)
-
-texts = text_splitter.split_documents(pages)
-
-
-'''
-
+## Encoding +Elbow
 from sklearn.cluster import KMeans
 from sentence_transformers import SentenceTransformer
-# Load the Sentence Transformer model
-
-model = SentenceTransformer('all-MiniLM-L6-v2')
-# Encoding the texts
-embeddings = model.encode(pages)
-
-# Calculate distortions for a range of number of clusters
-inertias = []
-K = range(1, 10)
-for k in K:
-    kmeanModel = KMeans(n_clusters=k, random_state=42).fit(embeddings)
-    inertias.append(kmeanModel.inertia_)
-    print(kmeanModel.inertia_)
-
 import numpy as np
 
+def encode_documents(model, documents: List[str]) -> np.ndarray:
+    return model.encode(documents)
 
-def find_elbow(inertias):
-    # Convert the inertia values to an array
+def calculate_inertias(embeddings: np.ndarray, k_range: range) -> List[float]:
+    return [KMeans(n_clusters=k, random_state=42).fit(embeddings).inertia_ for k in k_range]
+
+def find_elbow(inertias: List[float]) -> int:
     n_points = len(inertias)
     all_coords = np.vstack((range(n_points), inertias)).T
+    line_vec = all_coords[-1] - all_coords[0]
+    line_vec_norm = line_vec / np.linalg.norm(line_vec)
+    vec_from_first = all_coords - all_coords[0]
+    scalar_product = np.dot(vec_from_first, line_vec_norm)
+    vec_to_line = vec_from_first - np.outer(scalar_product, line_vec_norm)
+    dist_to_line = np.linalg.norm(vec_to_line, axis=1)
+    return np.argmax(dist_to_line)
+
+## Cluster+ Retrieve
+def cluster_and_retrieve_docs(embeddings: np.ndarray, query_index: int, num_docs: int) -> List[int]:
+    elbow_index = find_elbow(calculate_inertias(embeddings, range(1, 10)))
+    kmeans = KMeans(n_clusters=elbow_index, random_state=42).fit(embeddings)
+    query_cluster = kmeans.labels_[query_index]
+    cluster_indices = [i for i, cluster_id in enumerate(kmeans.labels_) if cluster_id == query_cluster and i != query_index]
+    return np.random.choice(cluster_indices, size=min(num_docs, len(cluster_indices)), replace=False) if len(cluster_indices) > num_docs else cluster_indices
+
+## Main
+import argparse
+
+def main(url: str, query: str, num_docs: int):
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+    html_content = fetch_html_content(url)
+    documents = parse_html_to_paragraphs(html_content)
+    all_documents = documents + [query]
+    embeddings = encode_documents(model, all_documents)
+    selected_indices = cluster_and_retrieve_docs(embeddings, len(documents), num_docs)
+    for index in selected_indices:
+        print(documents[index])
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Document Retrieval with KMeans Clustering')
+    parser.add_argument('-i', '--input-url', required=True, help='URL of the document to process')
+    parser.add_argument('-q', '--query', required=True, help='Query to match in the document')
+    parser.add_argument('-k', '--num-docs', type=int, required=True, help='Number of documents to retrieve')
+    args = parser.parse_args()
     
-    # Get the line from the first to the last point
-    first_point = all_coords[0]
-    last_point = all_coords[-1]
-    line_vec = last_point - first_point
-    line_vec_norm = line_vec / np.sqrt(np.sum(line_vec**2))
-    
-    # Calculate the distance to the line for each point
-    vec_from_first = all_coords - first_point
-    scalar_product = np.sum(vec_from_first * line_vec_norm, axis=1)
-    vec_from_first_parallel = np.outer(scalar_product, line_vec_norm)
-    vec_to_line = vec_from_first - vec_from_first_parallel
-    dist_to_line = np.sqrt(np.sum(vec_to_line ** 2, axis=1))
-    
-    # The point with the maximum distance to the line is the elbow
-    idx_of_elbow = np.argmax(dist_to_line)
-    
-    return idx_of_elbow
+    main(args.input_url, args.query, args.num_docs)
 
-
-elbow_index = find_elbow(inertias)
-print("The optimal number of clusters (elbow point) is at index:", elbow_index)
-
-def split_pages(pages:List[str], model)-> List[str]:
-    embeddings = model.encode(pages)
-    kmeans = KMeans(n_clusters=elbow_index, random_state=42)
-    clusters = kmeans.fit_predict(embeddings)
-    return [kmeans.cluster_centers_[i] for i in clusters]
-
-splits = split_pages(pages, model)
-
-import chromadb
+'''import chromadb
 client = chromadb.Client()
 
 collection = client.get_or_create_collection("test_splits_2", metadata={"name": "test_splits_2"})
@@ -105,4 +81,4 @@ results = collection.query(
 )
 
 #print out results between delimeters
-print([doc for doc in results])
+print([doc for doc in results])'''

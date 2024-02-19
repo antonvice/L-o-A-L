@@ -1,4 +1,6 @@
 # L-o-A-w-L (Level of Abstraction with LLM) 📚
+# UPDATE
+### I am suspending the project (a few days) until I figure out the semantic clustering found at [my other repo]("https://github.com/antonvice/kmeans-retriever.git) . I want to continue building the project based on the scientific method of clustering texts by semantic value because it is one of the fundamental building blocks for this project and it must be completed first.
 
 ## Overview
 L-o-A-w-L (Level of Abstraction with LLM) is an innovative 🛠️ tool designed to dynamically adjust the level of abstraction in a document using language learning models (LLMs). Leveraging the power of LLMs, L-o-A-w-L allows users to interactively explore 🕵️‍♂️ documents at various levels of detail, simply by scrolling 🖱️ to increase or decrease the abstraction level. This project aims to enhance reading efficiency 🚀 and comprehension, making it easier to grasp complex documents or quickly get an overview of lengthy texts.
